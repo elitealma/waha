@@ -47,6 +47,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.pegasus360agency.com}`)"
       - "traefik.http.routers.waha.entrypoints=websecure"
+      - "traefik.http.routers.waha.tls=true"
       - "traefik.http.routers.waha.tls.certresolver=letsencryptresolver"
       - "traefik.http.services.waha.loadbalancer.server.port=3000"
       - "traefik.http.routers.waha.service=waha"

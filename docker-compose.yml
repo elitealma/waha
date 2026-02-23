@@ -25,16 +25,25 @@ services:
         max-size: '100m'
         max-file: '10'
 
-    ports:
-      # Puerto expuesto para acceso externo (Portainer/VPS)
-      # Cambiar a '127.0.0.1:3000:3000' si usas Nginx como proxy
-      - '3000:3000'
+    # Eliminamos el mapeo de puertos directo ya que usaremos Traefik
+    # ports:
+    #   - '3000:3000'
 
     volumes:
-      # Almacenar sesiones de WhatsApp (persistencia entre reinicios)
       - waha_sessions:/app/.sessions
-      # Almacenar archivos multimedia
       - waha_media:/app/.media
+
+    networks:
+      - default
+      - proxy
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.tudominio.com}`)"
+      - "traefik.http.routers.waha.entrypoints=websecure"
+      - "traefik.http.routers.waha.tls.certresolver=myresolver"
+      - "traefik.http.services.waha.loadbalancer.server.port=3000"
+      - "traefik.http.routers.waha.service=waha"
 
     environment:
       # =====================================================
@@ -87,3 +96,7 @@ volumes:
     driver: local
   waha_media:
     driver: local
+
+networks:
+  proxy:
+    external: true

@@ -19,6 +19,14 @@ services:
       placement:
         constraints:
           - node.role == manager # Opcional: asegurar que corra en el manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.pegasus360agency.com}`)"
+        - "traefik.http.routers.waha.entrypoints=websecure"
+        - "traefik.http.routers.waha.tls=true"
+        - "traefik.http.routers.waha.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.waha.loadbalancer.server.port=3000"
+        - "traefik.http.routers.waha.service=waha"
 
     # DNS para resolver web.whatsapp.com correctamente
     dns:
@@ -43,14 +51,6 @@ services:
       - default
       - pegasus_net
 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.pegasus360agency.com}`)"
-      - "traefik.http.routers.waha.entrypoints=websecure"
-      - "traefik.http.routers.waha.tls=true"
-      - "traefik.http.routers.waha.tls.certresolver=letsencryptresolver"
-      - "traefik.http.services.waha.loadbalancer.server.port=3000"
-      - "traefik.http.routers.waha.service=waha"
 
     environment:
       # =====================================================

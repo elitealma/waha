@@ -29,9 +29,9 @@ services:
         - "traefik.http.routers.waha.service=waha"
 
     # DNS para resolver web.whatsapp.com correctamente
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
+    # dns:
+    #   - 1.1.1.1
+    #   - 8.8.8.8
 
     logging:
       driver: 'json-file'

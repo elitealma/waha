@@ -29,9 +29,12 @@ services:
         - "traefik.http.routers.waha.service=waha"
 
     # DNS para resolver web.whatsapp.com correctamente
-    # dns:
-    #   - 1.1.1.1
-    #   - 8.8.8.8
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    # Importante para que el navegador no se bloquee
+    shm_size: '2gb'
 
     logging:
       driver: 'json-file'

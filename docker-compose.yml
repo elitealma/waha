@@ -1,0 +1,89 @@
+# =============================================================================
+# WAHA - WhatsApp HTTP API
+# Stack para Portainer - Deploy via Git Repository
+# Documentación: https://waha.devlike.pro/docs/how-to/install/
+# =============================================================================
+
+services:
+  waha:
+    image: devlikeapro/waha:latest
+    # Si tienes WAHA Plus, cambia a:
+    # image: devlikeapro/waha-plus
+    # Si usas ARM (Raspberry Pi, etc.), cambia a:
+    # image: devlikeapro/waha:arm
+    container_name: waha
+    restart: always
+
+    # DNS para resolver web.whatsapp.com correctamente
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '10'
+
+    ports:
+      # Puerto expuesto para acceso externo (Portainer/VPS)
+      # Cambiar a '127.0.0.1:3000:3000' si usas Nginx como proxy
+      - '3000:3000'
+
+    volumes:
+      # Almacenar sesiones de WhatsApp (persistencia entre reinicios)
+      - waha_sessions:/app/.sessions
+      # Almacenar archivos multimedia
+      - waha_media:/app/.media
+
+    environment:
+      # =====================================================
+      # CREDENCIALES - ¡CAMBIAR ANTES DE USAR EN PRODUCCIÓN!
+      # =====================================================
+      # API Key para autenticación de requests
+      - WAHA_API_KEY=${WAHA_API_KEY:-your-api-key-change-me}
+
+      # Dashboard credentials
+      - WAHA_DASHBOARD_USERNAME=${WAHA_DASHBOARD_USERNAME:-admin}
+      - WAHA_DASHBOARD_PASSWORD=${WAHA_DASHBOARD_PASSWORD:-your-password-change-me}
+
+      # Swagger UI credentials
+      - WHATSAPP_SWAGGER_USERNAME=${WHATSAPP_SWAGGER_USERNAME:-admin}
+      - WHATSAPP_SWAGGER_PASSWORD=${WHATSAPP_SWAGGER_PASSWORD:-your-password-change-me}
+
+      # =====================================================
+      # CONFIGURACIÓN GENERAL
+      # =====================================================
+      # URL base (cambiar a tu dominio/IP real)
+      - WAHA_BASE_URL=${WAHA_BASE_URL:-http://localhost:3000}
+
+      # Configuración de webhooks (para n8n u otras integraciones)
+      # - WHATSAPP_HOOK_URL=${WHATSAPP_HOOK_URL:-}
+      # - WHATSAPP_HOOK_EVENTS=${WHATSAPP_HOOK_EVENTS:-message,message.any,state.change,group.join,group.leave}
+
+      # Motor de WhatsApp (WEBJS o NOWEB)
+      # NOWEB es más rápido y ligero, WEBJS es más completo
+      # - WHATSAPP_DEFAULT_ENGINE=${WHATSAPP_DEFAULT_ENGINE:-WEBJS}
+
+    # Limites de recursos (ajustar según tu servidor)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2G
+    #       cpus: '2.0'
+    #     reservations:
+    #       memory: 512M
+    #       cpus: '0.5'
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  waha_sessions:
+    driver: local
+  waha_media:
+    driver: local

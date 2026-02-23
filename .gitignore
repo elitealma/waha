@@ -1,0 +1,13 @@
+# Variables de entorno con credenciales reales
+.env
+
+# Sesiones de WhatsApp
+sessions/
+
+# Archivos multimedia
+media/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.log

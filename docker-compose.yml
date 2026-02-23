@@ -39,7 +39,7 @@ services:
 
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.tudominio.com}`)"
+      - "traefik.http.routers.waha.rule=Host(`${WAHA_DOMAIN:-waha.pegasus360agency.com}`)"
       - "traefik.http.routers.waha.entrypoints=websecure"
       - "traefik.http.routers.waha.tls.certresolver=myresolver"
       - "traefik.http.services.waha.loadbalancer.server.port=3000"
@@ -63,8 +63,8 @@ services:
       # =====================================================
       # CONFIGURACIÓN GENERAL
       # =====================================================
-      # URL base (cambiar a tu dominio/IP real)
-      - WAHA_BASE_URL=${WAHA_BASE_URL:-http://localhost:3000}
+      # URL base (cambiar a tu dominio real)
+      - WAHA_BASE_URL=${WAHA_BASE_URL:-https://waha.pegasus360agency.com}
 
       # Configuración de webhooks (para n8n u otras integraciones)
       # - WHATSAPP_HOOK_URL=${WHATSAPP_HOOK_URL:-}

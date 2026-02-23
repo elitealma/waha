@@ -11,8 +11,14 @@ services:
     # image: devlikeapro/waha-plus
     # Si usas ARM (Raspberry Pi, etc.), cambia a:
     # image: devlikeapro/waha:arm
-    container_name: waha
-    restart: always
+    # container_name: waha # Swarm no soporta nombres fijos de contenedor
+    # restart: always # En Swarm se usa 'deploy'
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager # Opcional: asegurar que corra en el manager
 
     # DNS para resolver web.whatsapp.com correctamente
     dns:
